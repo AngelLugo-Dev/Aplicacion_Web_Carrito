@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IoT Car Control - WebSocket Puro</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <h1>
+          <i class="fas fa-car-side"></i>
+          IoT Car Control
+          <span style="font-size: 14px; opacity: 0.7">WebSocket Puro</span>
+        </h1>
+        <div class="status">
+          <div id="statusIndicator" class="status-indicator offline"></div>
+          <span id="statusText">Desconectado</span>
+        </div>
+      </div>
+
+      <!-- Navegación de Pestañas -->
+      <div class="tabs-nav">
+        <button class="nav-tab active" data-view="control">
+          <i class="fas fa-gamepad"></i> Control
+        </button>
+        <button class="nav-tab" data-view="monitor">
+          <i class="fas fa-desktop"></i> Monitor
+        </button>
+        <button class="nav-tab" data-view="config">
+          <i class="fas fa-cog"></i> Configuración
+        </button>
+      </div>
+
+      <!-- Vista de Control -->
+      <div id="controlView">
+        <!-- Stats Grid -->
+        <div class="grid">
+          <div class="card">
+            <h2><i class="fas fa-microchip"></i> Dispositivo Activo</h2>
+            <div class="mb-20">
+              <label>ID de Dispositivo</label>
+              <input type="number" id="deviceIdInput" value="1" min="1" />
+            </div>
+            <div id="deviceInfo">
+              <p class="text-center">Cargando...</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2><i class="fas fa-chart-bar"></i> Estadísticas</h2>
+            <div class="stats">
+              <div class="stat-item">
+                <span class="label">Comandos</span>
+                <span class="value" id="commandCount">0</span>
+              </div>
+              <div class="stat-item">
+                <span class="label">Obstáculos</span>
+                <span class="value" id="obstacleCount">0</span>
+              </div>
+              <div class="stat-item">
+                <span class="label">Sesión</span>
+                <span class="value" id="sessionTime">00:00</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2><i class="fas fa-info-circle"></i> Información</h2>
+            <p style="font-size: 14px; opacity: 0.9; line-height: 1.6">
+              Sistema de control remoto con WebSocket nativo del navegador. Usa
+              las flechas o WASD para controlar el carrito. Presiona ESPACIO
+              para detener.
+            </p>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="grid">
+          <div class="card" style="grid-column: span 2">
+            <h2><i class="fas fa-gamepad"></i> Panel de Control</h2>
+
+            <div class="controls-grid">
+              <button class="control-btn" data-command="forward_left">
+                <i
+                  class="fas fa-arrow-up"
+                  style="transform: rotate(-45deg)"
+                ></i>
+                <span>↖ Izq</span>
+              </button>
+              <button class="control-btn" data-command="forward">
+                <i class="fas fa-arrow-up"></i>
+                <span>Adelante</span>
+              </button>
+              <button class="control-btn" data-command="forward_right">
+                <i class="fas fa-arrow-up" style="transform: rotate(45deg)"></i>
+                <span>↗ Der</span>
+              </button>
+
+              <button class="control-btn" data-command="left">
+                <i class="fas fa-rotate-left"></i>
+                <span>90° Izq</span>
+              </button>
+              <button class="control-btn stop" data-command="stop">
+                <i class="fas fa-stop"></i>
+                <span>DETENER</span>
+              </button>
+              <button class="control-btn" data-command="right">
+                <i class="fas fa-rotate-right"></i>
+                <span>90° Der</span>
+              </button>
+
+              <button class="control-btn" data-command="backward_left">
+                <i
+                  class="fas fa-arrow-down"
+                  style="transform: rotate(45deg)"
+                ></i>
+                <span>↙ Izq</span>
+              </button>
+              <button class="control-btn" data-command="backward">
+                <i class="fas fa-arrow-down"></i>
+                <span>Atrás</span>
+              </button>
+              <button class="control-btn" data-command="backward_right">
+                <i
+                  class="fas fa-arrow-down"
+                  style="transform: rotate(-45deg)"
+                ></i>
+                <span>↘ Der</span>
+              </button>
+
+              <button class="control-btn rotate" data-command="rotate_left">
+                <i class="fas fa-sync-alt"></i>
+                <span>360° Izquierda</span>
+              </button>
+              <button class="control-btn rotate" data-command="rotate_right">
+                <i class="fas fa-sync-alt" style="transform: scaleX(-1)"></i>
+                <span>360° Derecha</span>
+              </button>
+            </div>
+
+            <div class="slider-container">
+              <label>
+                <span>Duración del movimiento</span>
+                <span id="durationValue">1000 ms</span>
+              </label>
+              <input
+                type="range"
+                id="durationSlider"
+                min="100"
+                max="5000"
+                value="1000"
+                step="100"
+              />
+            </div>
+
+            <div style="margin-top: 20px">
+              <button id="simulateObstacleBtn" class="btn btn-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                Simular Obstáculo (Dev)
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2><i class="fas fa-list"></i> Constructor de Secuencias</h2>
+
+            <!-- Agregar Movimiento -->
+            <div class="mb-20">
+              <label>Comando</label>
+              <select id="sequenceCommandSelect" class="form-control">
+                <option value="forward">Adelante</option>
+                <option value="backward">Atrás</option>
+                <option value="left">Girar Izquierda 90°</option>
+                <option value="right">Girar Derecha 90°</option>
+                <option value="forward_left">Adelante Izquierda</option>
+                <option value="forward_right">Adelante Derecha</option>
+                <option value="backward_left">Atrás Izquierda</option>
+                <option value="backward_right">Atrás Derecha</option>
+                <option value="rotate_left">Rotación Izquierda 360°</option>
+                <option value="rotate_right">Rotación Derecha 360°</option>
+                <option value="stop">Detener</option>
+              </select>
+            </div>
+
+            <div class="mb-20">
+              <label>Duración (ms)</label>
+              <input
+                type="number"
+                id="sequenceDurationInput"
+                min="100"
+                max="10000"
+                value="1000"
+                step="100"
+                class="form-control"
+              />
+            </div>
+
+            <button
+              id="addToSequenceBtn"
+              class="btn btn-primary"
+              style="width: 100%"
+            >
+              <i class="fas fa-plus"></i> Agregar Movimiento
+            </button>
+
+            <!-- Lista de Secuencia -->
+            <div style="margin-top: 20px">
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 10px;
+                "
+              >
+                <h3 style="margin: 0; font-size: 16px">
+                  Secuencia (<span id="sequenceCount">0</span> pasos)
+                </h3>
+                <button id="clearSequenceBtn" class="btn btn-danger">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+              <div id="sequenceList" class="sequence-list">
+                <div class="text-center" style="padding: 20px; opacity: 0.6">
+                  <i
+                    class="fas fa-list"
+                    style="font-size: 24px; margin-bottom: 10px"
+                  ></i>
+                  <p>Sin movimientos</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Controles de Secuencia -->
+            <div
+              class="grid"
+              style="
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                margin-top: 15px;
+              "
+            >
+              <button id="executeSequenceBtn" class="btn btn-success" disabled>
+                <i class="fas fa-play"></i> Ejecutar
+              </button>
+              <button id="saveSequenceBtn" class="btn btn-primary" disabled>
+                <i class="fas fa-save"></i> Guardar
+              </button>
+            </div>
+
+            <!-- Demos Predefinidos -->
+            <div style="margin-top: 20px">
+              <h3 style="font-size: 16px; margin-bottom: 10px">
+                Demos Predefinidos
+              </h3>
+              <div
+                class="grid"
+                style="grid-template-columns: repeat(3, 1fr); gap: 8px"
+              >
+                <button
+                  class="load-demo-btn btn btn-secondary"
+                  data-demo="square"
+                >
+                  <i class="fas fa-square"></i> Cuadrado
+                </button>
+                <button
+                  class="load-demo-btn btn btn-secondary"
+                  data-demo="circle"
+                >
+                  <i class="fas fa-circle"></i> Círculo
+                </button>
+                <button
+                  class="load-demo-btn btn btn-secondary"
+                  data-demo="zigzag"
+                >
+                  <i class="fas fa-wave-square"></i> Zigzag
+                </button>
+              </div>
+            </div>
+
+            <!-- Estado de Ejecución -->
+            <div
+              id="demoStatus"
+              class="hidden"
+              style="
+                margin-top: 15px;
+                padding: 15px;
+                background: rgba(0, 200, 83, 0.2);
+                border-radius: 8px;
+                text-align: center;
+              "
+            >
+              <i class="fas fa-spinner fa-spin"></i>
+              <p
+                id="demoStatusText"
+                style="margin: 5px 0 0 0; font-weight: 600"
+              >
+                Ejecutando...
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vista de Monitor -->
+      <div id="monitorView" class="hidden">
+        <div class="grid">
+          <!-- Estadísticas en Monitor -->
+          <div class="card">
+            <h2>
+              <i class="fas fa-chart-line"></i> Estadísticas en Tiempo Real
+            </h2>
+            <div class="stats">
+              <div class="stat-item">
+                <span class="label">Comandos</span>
+                <span class="value" id="commandCountMonitor">0</span>
+              </div>
+              <div class="stat-item">
+                <span class="label">Obstáculos</span>
+                <span class="value" id="obstacleCountMonitor">0</span>
+              </div>
+              <div class="stat-item">
+                <span class="label">Sesión</span>
+                <span class="value" id="sessionTimeMonitor">00:00</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mensajes en Monitor -->
+          <div class="card" style="grid-column: span 2">
+            <h2><i class="fas fa-bell"></i> Mensajes en Vivo</h2>
+            <div
+              style="
+                display: flex;
+                gap: 10px;
+                margin-bottom: 15px;
+                flex-wrap: wrap;
+              "
+            >
+              <button class="message-filter active" data-filter="all">
+                <i class="fas fa-list"></i> Todos
+              </button>
+              <button class="message-filter" data-filter="command">
+                <i class="fas fa-gamepad"></i> Comandos
+              </button>
+              <button class="message-filter" data-filter="obstacle">
+                <i class="fas fa-exclamation-triangle"></i> Obstáculos
+              </button>
+              <button class="message-filter" data-filter="status">
+                <i class="fas fa-info-circle"></i> Estado
+              </button>
+              <button
+                id="clearMessagesBtn"
+                class="btn btn-danger"
+                style="margin-left: auto"
+              >
+                <i class="fas fa-trash"></i> Limpiar
+              </button>
+            </div>
+            <div id="messagesContainer" class="messages-container">
+              <p class="text-center">Sin mensajes</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Historial -->
+        <div class="card">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 20px;
+            "
+          >
+            <h2><i class="fas fa-history"></i> Historial de Movimientos</h2>
+            <button id="refreshHistoryBtn" class="btn btn-primary">
+              <i class="fas fa-sync-alt"></i> Actualizar
+            </button>
+          </div>
+          <div style="overflow-x: auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>Fecha/Hora</th>
+                  <th>Comando</th>
+                  <th>Duración</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody id="historyTable">
+                <tr>
+                  <td colspan="4" class="text-center">Cargando historial...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vista de Configuración -->
+      <div id="configView" class="hidden">
+        <div class="grid">
+          <!-- Configuración de Conexión -->
+          <div class="card" style="grid-column: span 2">
+            <h2>
+              <i class="fas fa-network-wired"></i> Configuración de Conexión
+            </h2>
+
+            <div class="config-section">
+              <h3><i class="fas fa-server"></i> Servidor Backend</h3>
+              <div class="config-item">
+                <label>API REST URL</label>
+                <div class="url-display">
+                  <code id="apiUrlDisplay">http://localhost:5500/api</code>
+                  <button
+                    class="btn-copy"
+                    onclick="copyToClipboard('apiUrlDisplay')"
+                  >
+                    <i class="fas fa-copy"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="config-item">
+                <label>WebSocket URL</label>
+                <div class="url-display">
+                  <code id="wsUrlDisplay">ws://localhost:5500/ws</code>
+                  <button
+                    class="btn-copy"
+                    onclick="copyToClipboard('wsUrlDisplay')"
+                  >
+                    <i class="fas fa-copy"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="config-item">
+                <label>Estado de Conexión</label>
+                <div class="connection-status">
+                  <div class="status-badge" id="wsConnectionStatus">
+                    <i class="fas fa-circle"></i>
+                    <span id="wsConnectionText">Desconectado</span>
+                  </div>
+                  <button class="btn btn-primary" onclick="wsClient.connect()">
+                    <i class="fas fa-plug"></i> Reconectar
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="config-section" style="margin-top: 30px">
+              <h3><i class="fas fa-database"></i> Base de Datos</h3>
+              <div class="config-item">
+                <label>RDS MySQL Instance</label>
+                <div class="info-box">
+                  <p>
+                    <strong>Host:</strong>
+                    instance-iot.cjsq62eqm24v.us-east-1.rds.amazonaws.com
+                  </p>
+                  <p><strong>Puerto:</strong> 3306</p>
+                  <p><strong>Base de Datos:</strong> iot_car_control</p>
+                  <p><strong>Región:</strong> us-east-1 (Norte de Virginia)</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="config-section" style="margin-top: 30px">
+              <h3><i class="fas fa-flask"></i> Pruebas de Conexión</h3>
+              <div class="config-item">
+                <label>URL de Prueba EC2 (WebSocket)</label>
+                <div class="url-display">
+                  <code id="ec2WsUrl">ws://EC2_PUBLIC_IP:5500/ws</code>
+                  <button
+                    class="btn-copy"
+                    onclick="copyToClipboard('ec2WsUrl')"
+                  >
+                    <i class="fas fa-copy"></i>
+                  </button>
+                </div>
+                <p style="margin-top: 10px; font-size: 13px; opacity: 0.8">
+                  <i class="fas fa-info-circle"></i>
+                  Reemplaza <strong>EC2_PUBLIC_IP</strong> con la IP pública de
+                  tu instancia EC2. Asegúrate de que el Security Group tenga el
+                  puerto 5500 abierto.
+                </p>
+              </div>
+
+              <div class="config-item" style="margin-top: 20px">
+                <label>Comandos de Prueba</label>
+                <div class="info-box">
+                  <p><strong>Verificar API REST:</strong></p>
+                  <pre>curl http://EC2_PUBLIC_IP:5500/api/health</pre>
+
+                  <p style="margin-top: 15px">
+                    <strong>Probar WebSocket (wscat):</strong>
+                  </p>
+                  <pre>
+npm install -g wscat
+wscat -c ws://EC2_PUBLIC_IP:5500/ws</pre
+                  >
+
+                  <p style="margin-top: 15px">
+                    <strong>Mensaje de registro:</strong>
+                  </p>
+                  <pre>{"type":"register_device","deviceId":1}</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Información del Sistema -->
+          <div class="card">
+            <h2><i class="fas fa-info-circle"></i> Información del Sistema</h2>
+
+            <div class="info-item">
+              <span class="label">Versión Frontend</span>
+              <span class="value">1.0.0</span>
+            </div>
+
+            <div class="info-item">
+              <span class="label">Versión Backend</span>
+              <span class="value">1.0.0 (Node.js)</span>
+            </div>
+
+            <div class="info-item">
+              <span class="label">Protocolo WebSocket</span>
+              <span class="value">ws:// (nativo)</span>
+            </div>
+
+            <div class="info-item">
+              <span class="label">Puerto Backend</span>
+              <span class="value">5500</span>
+            </div>
+
+            <div class="info-item">
+              <span class="label">Comandos Disponibles</span>
+              <span class="value">11</span>
+            </div>
+
+            <div class="info-item">
+              <span class="label">CORS Habilitado</span>
+              <span class="value">✅ Sí</span>
+            </div>
+
+            <div style="margin-top: 30px">
+              <h3 style="font-size: 16px; margin-bottom: 15px">
+                <i class="fas fa-link"></i> Enlaces Rápidos
+              </h3>
+              <button
+                class="btn btn-primary"
+                style="width: 100%; margin-bottom: 10px"
+                onclick="testAPIConnection()"
+              >
+                <i class="fas fa-vial"></i> Probar API REST
+              </button>
+              <button
+                class="btn btn-primary"
+                style="width: 100%; margin-bottom: 10px"
+                onclick="testWSConnection()"
+              >
+                <i class="fas fa-plug"></i> Probar WebSocket
+              </button>
+              <button
+                class="btn btn-warning"
+                style="width: 100%"
+                onclick="window.open('https://github.com/AngelLugo-Dev/frontend-web-iot', '_blank')"
+              >
+                <i class="fab fa-github"></i> Ver Repositorio
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div
+        style="
+          text-align: center;
+          margin-top: 30px;
+          opacity: 0.7;
+          font-size: 14px;
+        "
+      >
+        <p>&copy; 2025 IoT Car Control - WebSocket Puro con Node.js</p>
+        <p>Desarrollado por Angel Eduardo Lugo López</p>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/websocket.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
