@@ -221,20 +221,31 @@ async function loadHistory() {
 
     if (response.success && response.events.length > 0) {
       tbody.innerHTML = response.events
-        .map(
-          (event) => `
-        <tr>
-          <td>${formatDate(event.event_ts)}</td>
-          <td><span class="badge">${
-            event.status_description || event.status_clave
-          }</span></td>
-          <td>${
-            event.meta ? JSON.parse(event.meta).duration_ms || "-" : "-"
-          } ms</td>
-          <td><span class="badge badge-success">OK</span></td>
-        </tr>
-      `
-        )
+        .map((event) => {
+          // Parsear meta si es string, o usar directamente si es objeto
+          let metaData = null;
+          try {
+            metaData =
+              typeof event.meta === "string"
+                ? JSON.parse(event.meta)
+                : event.meta;
+          } catch (e) {
+            console.warn("Error parseando meta:", e);
+          }
+
+          const duration = metaData?.duration_ms || metaData?.duration || "-";
+
+          return `
+            <tr>
+              <td>${formatDate(event.event_ts)}</td>
+              <td><span class="badge">${
+                event.status_description || event.status_clave
+              }</span></td>
+              <td>${duration !== "-" ? duration + " ms" : "-"}</td>
+              <td><span class="badge badge-success">OK</span></td>
+            </tr>
+          `;
+        })
         .join("");
     } else {
       tbody.innerHTML =
@@ -242,6 +253,10 @@ async function loadHistory() {
     }
   } catch (error) {
     console.error("Error cargando historial:", error);
+    const tbody = document.getElementById("historyTable");
+    tbody.innerHTML =
+      '<tr><td colspan="4" class="text-center text-danger">Error cargando historial</td></tr>';
+    showNotification("Error al cargar historial", "error");
   }
 }
 
@@ -385,9 +400,11 @@ function switchView(targetView) {
     tab.classList.toggle("active", isActive);
   });
 
-  // Actualizar URLs en vista de configuración
+  // Cargar datos específicos de cada vista
   if (targetView === "config") {
     updateConfigView();
+  } else if (targetView === "monitor") {
+    loadHistory(); // Cargar historial al entrar a la vista monitor
   }
 }
 
