@@ -660,8 +660,9 @@ function filterMessages(filterType) {
 // ========================================
 
 function updateConfigView() {
-  // Actualizar URLs mostradas
-  document.getElementById("apiUrlDisplay").textContent = CONFIG.API_URL;
+  // Actualizar URLs mostradas dinámicamente desde CONFIG
+  document.getElementById("apiUrlDisplay").textContent =
+    CONFIG.API_BASE_URL + "/api";
   document.getElementById("wsUrlDisplay").textContent = CONFIG.WS_URL;
 
   // Actualizar estado de conexión

@@ -1,8 +1,8 @@
 // Configuración global
 const CONFIG = {
-  // Cambiar por tu IP de EC2 cuando despliegues
-  API_BASE_URL: "http://localhost:5500",
-  WS_URL: "ws://localhost:5500/ws",
+  // IP Elástica de EC2 en producción
+  API_BASE_URL: "http://54.204.39.238:5500",
+  WS_URL: "ws://54.204.39.238:5500/ws",
 
   // Dispositivo por defecto
   DEFAULT_DEVICE_ID: 1,

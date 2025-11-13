@@ -10,13 +10,13 @@ Editar `js/config.js` y cambiar las URLs:
 
 ```javascript
 const CONFIG = {
-  // Desarrollo local
-  API_BASE_URL: "http://localhost:5500",
-  WS_URL: "ws://localhost:5500/ws",
+  // PRODUCCIÓN ACTUAL (IP Elástica EC2)
+  API_BASE_URL: "http://54.204.39.238:5500",
+  WS_URL: "ws://54.204.39.238:5500/ws",
 
-  // Producción (cambiar por IP de tu EC2)
-  // API_BASE_URL: "http://54.204.39.238:5500",
-  // WS_URL: "ws://54.204.39.238:5500/ws",
+  // Desarrollo local (comentado)
+  // API_BASE_URL: "http://localhost:5500",
+  // WS_URL: "ws://localhost:5500/ws",
 
   DEFAULT_DEVICE_ID: 1,
 };

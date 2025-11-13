@@ -415,11 +415,13 @@
             </h2>
 
             <div class="config-section">
-              <h3><i class="fas fa-server"></i> Servidor Backend</h3>
+              <h3>
+                <i class="fas fa-server"></i> Servidor Backend (Producción)
+              </h3>
               <div class="config-item">
                 <label>API REST URL</label>
                 <div class="url-display">
-                  <code id="apiUrlDisplay">http://localhost:5500/api</code>
+                  <code id="apiUrlDisplay">http://54.204.39.238:5500/api</code>
                   <button
                     class="btn-copy"
                     onclick="copyToClipboard('apiUrlDisplay')"
@@ -432,7 +434,7 @@
               <div class="config-item">
                 <label>WebSocket URL</label>
                 <div class="url-display">
-                  <code id="wsUrlDisplay">ws://localhost:5500/ws</code>
+                  <code id="wsUrlDisplay">ws://54.204.39.238:5500/ws</code>
                   <button
                     class="btn-copy"
                     onclick="copyToClipboard('wsUrlDisplay')"
@@ -475,9 +477,9 @@
             <div class="config-section" style="margin-top: 30px">
               <h3><i class="fas fa-flask"></i> Pruebas de Conexión</h3>
               <div class="config-item">
-                <label>URL de Prueba EC2 (WebSocket)</label>
+                <label>IP Elástica EC2 (Producción)</label>
                 <div class="url-display">
-                  <code id="ec2WsUrl">ws://EC2_PUBLIC_IP:5500/ws</code>
+                  <code id="ec2WsUrl">ws://54.204.39.238:5500/ws</code>
                   <button
                     class="btn-copy"
                     onclick="copyToClipboard('ec2WsUrl')"
@@ -486,10 +488,9 @@
                   </button>
                 </div>
                 <p style="margin-top: 10px; font-size: 13px; opacity: 0.8">
-                  <i class="fas fa-info-circle"></i>
-                  Reemplaza <strong>EC2_PUBLIC_IP</strong> con la IP pública de
-                  tu instancia EC2. Asegúrate de que el Security Group tenga el
-                  puerto 5500 abierto.
+                  <i class="fas fa-check-circle"></i>
+                  IP Elástica configurada en <strong>54.204.39.238</strong>. El
+                  Security Group debe tener el puerto 5500 abierto.
                 </p>
               </div>
 
@@ -497,14 +498,14 @@
                 <label>Comandos de Prueba</label>
                 <div class="info-box">
                   <p><strong>Verificar API REST:</strong></p>
-                  <pre>curl http://EC2_PUBLIC_IP:5500/api/health</pre>
+                  <pre>curl http://54.204.39.238:5500/api/health</pre>
 
                   <p style="margin-top: 15px">
                     <strong>Probar WebSocket (wscat):</strong>
                   </p>
                   <pre>
 npm install -g wscat
-wscat -c ws://EC2_PUBLIC_IP:5500/ws</pre
+wscat -c ws://54.204.39.238:5500/ws</pre
                   >
 
                   <p style="margin-top: 15px">
