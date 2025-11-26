@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>IoT Car Control - WebSocket Puro</title>
+    <link rel="icon" type="image/svg+xml" href="IconIoT.svg" />
     <link rel="stylesheet" href="css/styles.css" />
     <link
       rel="stylesheet"
@@ -161,14 +162,20 @@
             </div>
 
             <div class="speed-control" style="margin-top: 20px">
-              <label style="display: block; margin-bottom: 10px; font-weight: 600">
+              <label
+                style="display: block; margin-bottom: 10px; font-weight: 600"
+              >
                 <i class="fas fa-tachometer-alt"></i> Velocidad del Motor
               </label>
               <div style="display: flex; gap: 10px; justify-content: center">
                 <button class="speed-btn" data-speed="1" title="PWM ~100">
                   <i class="fas fa-turtle"></i> Lenta
                 </button>
-                <button class="speed-btn active" data-speed="2" title="PWM ~160">
+                <button
+                  class="speed-btn active"
+                  data-speed="2"
+                  title="PWM ~160"
+                >
                   <i class="fas fa-walking"></i> Media
                 </button>
                 <button class="speed-btn" data-speed="3" title="PWM 255">
