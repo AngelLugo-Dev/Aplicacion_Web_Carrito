@@ -152,18 +152,18 @@
               />
             </div>
 
-            <div class="speed-control" style="margin-top: 8px">
+            <div class="speed-control" style="margin-top: 5px">
               <label
                 style="
                   display: block;
-                  margin-bottom: 5px;
+                  margin-bottom: 4px;
                   font-weight: 600;
-                  font-size: 12px;
+                  font-size: 11px;
                 "
               >
-                <i class="fas fa-tachometer-alt"></i> Velocidad del Motor
+                <i class="fas fa-tachometer-alt"></i> Velocidad
               </label>
-              <div style="display: flex; gap: 5px; justify-content: center">
+              <div style="display: flex; gap: 4px; justify-content: center">
                 <button class="speed-btn" data-speed="1" title="PWM ~100">
                   <i class="fas fa-turtle"></i> Lenta
                 </button>
@@ -224,29 +224,29 @@
             </button>
 
             <!-- Lista de Secuencia -->
-            <div style="margin-top: 8px">
+            <div style="margin-top: 5px">
               <div
                 style="
                   display: flex;
                   justify-content: space-between;
                   align-items: center;
-                  margin-bottom: 5px;
+                  margin-bottom: 4px;
                 "
               >
-                <h3 style="margin: 0; font-size: 13px">
-                  Secuencia (<span id="sequenceCount">0</span> pasos)
+                <h3 style="margin: 0; font-size: 12px">
+                  Secuencia (<span id="sequenceCount">0</span>)
                 </h3>
                 <button id="clearSequenceBtn" class="btn btn-danger">
                   <i class="fas fa-trash"></i>
                 </button>
               </div>
               <div id="sequenceList" class="sequence-list">
-                <div class="text-center" style="padding: 10px; opacity: 0.6">
+                <div class="text-center" style="padding: 8px; opacity: 0.6">
                   <i
                     class="fas fa-list"
-                    style="font-size: 16px; margin-bottom: 5px"
+                    style="font-size: 14px; margin-bottom: 4px"
                   ></i>
-                  <p style="font-size: 11px">Sin movimientos</p>
+                  <p style="font-size: 10px">Sin movimientos</p>
                 </div>
               </div>
             </div>
@@ -254,7 +254,7 @@
             <!-- Controles de Secuencia -->
             <div
               class="grid"
-              style="grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 6px"
+              style="grid-template-columns: 1fr; gap: 4px; margin-top: 5px"
             >
               <button id="executeSequenceBtn" class="btn btn-success" disabled>
                 <i class="fas fa-play"></i> Ejecutar Secuencia
@@ -262,13 +262,11 @@
             </div>
 
             <!-- Demos Predefinidos -->
-            <div style="margin-top: 8px">
-              <h3 style="font-size: 13px; margin-bottom: 5px">
-                Demos Predefinidos
-              </h3>
+            <div style="margin-top: 5px">
+              <h3 style="font-size: 12px; margin-bottom: 4px">Demos</h3>
               <div
                 class="grid"
-                style="grid-template-columns: repeat(3, 1fr); gap: 5px"
+                style="grid-template-columns: repeat(3, 1fr); gap: 4px"
               >
                 <button
                   class="load-demo-btn btn btn-secondary"
@@ -296,10 +294,10 @@
               id="demoStatus"
               class="hidden"
               style="
-                margin-top: 6px;
-                padding: 8px;
+                margin-top: 5px;
+                padding: 6px;
                 background: rgba(0, 200, 83, 0.2);
-                border-radius: 8px;
+                border-radius: 6px;
                 text-align: center;
               "
             >
