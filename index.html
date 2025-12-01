@@ -74,7 +74,7 @@
 
           <div class="card">
             <h2><i class="fas fa-info-circle"></i> Información</h2>
-            <p style="font-size: 14px; opacity: 0.9; line-height: 1.6">
+            <p style="font-size: 12px; opacity: 0.9; line-height: 1.4">
               Sistema de control remoto con WebSocket nativo del navegador. Usa
               las flechas o WASD para controlar el carrito. Presiona ESPACIO
               para detener.
@@ -161,13 +161,18 @@
               />
             </div>
 
-            <div class="speed-control" style="margin-top: 12px">
+            <div class="speed-control" style="margin-top: 10px">
               <label
-                style="display: block; margin-bottom: 8px; font-weight: 600"
+                style="
+                  display: block;
+                  margin-bottom: 6px;
+                  font-weight: 600;
+                  font-size: 13px;
+                "
               >
                 <i class="fas fa-tachometer-alt"></i> Velocidad del Motor
               </label>
-              <div style="display: flex; gap: 8px; justify-content: center">
+              <div style="display: flex; gap: 6px; justify-content: center">
                 <button class="speed-btn" data-speed="1" title="PWM ~100">
                   <i class="fas fa-turtle"></i> Lenta
                 </button>
@@ -184,7 +189,7 @@
               </div>
             </div>
 
-            <div style="margin-top: 12px">
+            <div style="margin-top: 10px">
               <button id="simulateObstacleBtn" class="btn btn-warning">
                 <i class="fas fa-exclamation-triangle"></i>
                 Simular Obstáculo (Dev)
@@ -235,16 +240,16 @@
             </button>
 
             <!-- Lista de Secuencia -->
-            <div style="margin-top: 12px">
+            <div style="margin-top: 10px">
               <div
                 style="
                   display: flex;
                   justify-content: space-between;
                   align-items: center;
-                  margin-bottom: 8px;
+                  margin-bottom: 6px;
                 "
               >
-                <h3 style="margin: 0; font-size: 15px">
+                <h3 style="margin: 0; font-size: 14px">
                   Secuencia (<span id="sequenceCount">0</span> pasos)
                 </h3>
                 <button id="clearSequenceBtn" class="btn btn-danger">
@@ -252,12 +257,12 @@
                 </button>
               </div>
               <div id="sequenceList" class="sequence-list">
-                <div class="text-center" style="padding: 15px; opacity: 0.6">
+                <div class="text-center" style="padding: 12px; opacity: 0.6">
                   <i
                     class="fas fa-list"
-                    style="font-size: 20px; margin-bottom: 8px"
+                    style="font-size: 18px; margin-bottom: 6px"
                   ></i>
-                  <p>Sin movimientos</p>
+                  <p style="font-size: 12px">Sin movimientos</p>
                 </div>
               </div>
             </div>
@@ -265,7 +270,7 @@
             <!-- Controles de Secuencia -->
             <div
               class="grid"
-              style="grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px"
+              style="grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 8px"
             >
               <button id="executeSequenceBtn" class="btn btn-success" disabled>
                 <i class="fas fa-play"></i> Ejecutar Secuencia
@@ -273,13 +278,13 @@
             </div>
 
             <!-- Demos Predefinidos -->
-            <div style="margin-top: 12px">
-              <h3 style="font-size: 15px; margin-bottom: 8px">
+            <div style="margin-top: 10px">
+              <h3 style="font-size: 14px; margin-bottom: 6px">
                 Demos Predefinidos
               </h3>
               <div
                 class="grid"
-                style="grid-template-columns: repeat(3, 1fr); gap: 8px"
+                style="grid-template-columns: repeat(3, 1fr); gap: 6px"
               >
                 <button
                   class="load-demo-btn btn btn-secondary"
@@ -307,8 +312,8 @@
               id="demoStatus"
               class="hidden"
               style="
-                margin-top: 10px;
-                padding: 12px;
+                margin-top: 8px;
+                padding: 10px;
                 background: rgba(0, 200, 83, 0.2);
                 border-radius: 8px;
                 text-align: center;
