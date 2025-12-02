@@ -79,62 +79,65 @@
             <h2><i class="fas fa-gamepad"></i> Panel de Control</h2>
 
             <div class="controls-grid">
+              <div></div>
               <button class="control-btn" data-command="forward_left">
                 <i
                   class="fas fa-arrow-up"
                   style="transform: rotate(-45deg)"
                 ></i>
-                <span>↖ Izq</span>
+                <span>↖</span>
               </button>
               <button class="control-btn" data-command="forward">
                 <i class="fas fa-arrow-up"></i>
-                <span>Adelante</span>
+                <span>↑</span>
               </button>
               <button class="control-btn" data-command="forward_right">
                 <i class="fas fa-arrow-up" style="transform: rotate(45deg)"></i>
-                <span>↗ Der</span>
+                <span>↗</span>
               </button>
+              <div></div>
 
+              <button class="control-btn rotate" data-command="rotate_left">
+                <i class="fas fa-sync-alt"></i>
+                <span>360°</span>
+              </button>
               <button class="control-btn" data-command="left">
                 <i class="fas fa-rotate-left"></i>
-                <span>90° Izq</span>
+                <span>90° ←</span>
               </button>
               <button class="control-btn stop" data-command="stop">
                 <i class="fas fa-stop"></i>
-                <span>DETENER</span>
+                <span>STOP</span>
               </button>
               <button class="control-btn" data-command="right">
                 <i class="fas fa-rotate-right"></i>
-                <span>90° Der</span>
+                <span>90° →</span>
+              </button>
+              <button class="control-btn rotate" data-command="rotate_right">
+                <i class="fas fa-sync-alt" style="transform: scaleX(-1)"></i>
+                <span>360°</span>
               </button>
 
+              <div></div>
               <button class="control-btn" data-command="backward_left">
                 <i
                   class="fas fa-arrow-down"
                   style="transform: rotate(45deg)"
                 ></i>
-                <span>↙ Izq</span>
+                <span>↙</span>
               </button>
               <button class="control-btn" data-command="backward">
                 <i class="fas fa-arrow-down"></i>
-                <span>Atrás</span>
+                <span>↓</span>
               </button>
               <button class="control-btn" data-command="backward_right">
                 <i
                   class="fas fa-arrow-down"
                   style="transform: rotate(-45deg)"
                 ></i>
-                <span>↘ Der</span>
+                <span>↘</span>
               </button>
-
-              <button class="control-btn rotate" data-command="rotate_left">
-                <i class="fas fa-sync-alt"></i>
-                <span>360° Izquierda</span>
-              </button>
-              <button class="control-btn rotate" data-command="rotate_right">
-                <i class="fas fa-sync-alt" style="transform: scaleX(-1)"></i>
-                <span>360° Derecha</span>
-              </button>
+              <div></div>
             </div>
 
             <div class="slider-container">
@@ -589,13 +592,16 @@ wscat -c ws://54.204.39.238:5500/ws</pre
       <div
         style="
           text-align: center;
-          margin-top: 30px;
+          margin-top: 3px;
           opacity: 0.7;
-          font-size: 14px;
+          font-size: 9px;
+          padding: 2px;
         "
       >
-        <p>&copy; 2025 IoT Car Control - WebSocket Puro con Node.js</p>
-        <p>Desarrollado por Angel Eduardo Lugo López</p>
+        <p>
+          &copy; 2025 IoT Car Control - WebSocket Puro con Node.js |
+          Desarrollado por Angel Eduardo Lugo López
+        </p>
       </div>
     </div>
 
