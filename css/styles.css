@@ -271,8 +271,9 @@ input[type="range"]::-webkit-slider-thumb {
 .info-item {
   display: flex;
   justify-content: space-between;
-  padding: 10px 0;
+  padding: 4px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 9px;
 }
 
 .info-item:last-child {
@@ -342,7 +343,7 @@ input[type="range"]::-webkit-slider-thumb {
 
 /* Table */
 .history-table-wrapper {
-  max-height: 150px;
+  max-height: 240px;
   overflow-y: auto;
   overflow-x: auto;
   background: rgba(0, 0, 0, 0.2);
@@ -438,12 +439,12 @@ th {
 /* Input */
 input[type="number"] {
   width: 100%;
-  padding: 5px;
+  padding: 3px;
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 4px;
   background: rgba(0, 0, 0, 0.2);
   color: #fff;
-  font-size: 11px;
+  font-size: 10px;
 }
 
 input[type="number"]:focus {
